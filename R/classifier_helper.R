@@ -75,7 +75,9 @@ varsfilter<-function(eset, vars = "row", remove_prop = 0.2){
 #' @param index folder name
 #' @param cols if null, palette should be set
 #' @param fig.type default is pdf, other option is png
-#' @param ID
+#' @param ID identifier of data
+#' @param width default is 6
+#' @param height default is 6.5
 #'
 #' @author Dongqiang Zeng
 #' @importFrom survminer surv_cutpoint
@@ -102,7 +104,9 @@ surv_cluster<-function(input_pdata,
                        mini_sig        = "score",
                        save_path       = paste0("KMplot"),
                        fig.type        = "pdf",
-                       index           = 1){
+                       index           = 1,
+                       width           = 6,
+                       height          = 6.5){
 
 
   if(!target_group%in%colnames(input_pdata)) stop("Target group must be in the column of input_pdata")
@@ -268,7 +272,7 @@ surv_cluster<-function(input_pdata,
   res <- arrange_ggsurvplots(pp, print = FALSE, ncol = 1, nrow = 1)
 
   ggsave(res,filename = paste0(index,"-KMplot-",target_group,"-",project,".", fig.type),
-         width =6 ,height =6.5,path = save_path)
+         width = width ,height = height,path = save_path)
   return(res)
 }
 
