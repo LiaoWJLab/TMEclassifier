@@ -52,6 +52,8 @@ tme_classifier<-function(eset,
 
     cat(crayon::green(">>>-- Aggreating scRNAseq data...\n"))
     if(is.null(slot)) slot<-"counts"
+
+    cat(crayon::green(">>>-- `orig.ident` was set as group. User can define through parameter `group.by` ...\n"))
     bulk <- Seurat:::PseudobulkExpression(object    = eset,
                                           pb.method = 'aggregate',
                                           slot      = slot,
@@ -61,8 +63,7 @@ tme_classifier<-function(eset,
 
     #transform count to tpm
     eset<-count2tpm(countMat = bulk, idType = "symbol", source = source_gene_length)
-
-    log2trans<-TRUE
+    eset<-log2eset(eset)
   }
 
 
