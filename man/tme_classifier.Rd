@@ -14,12 +14,17 @@ tme_classifier(
   adjust_eset = FALSE,
   replace_na = TRUE,
   log2trans = FALSE,
-  scale = FALSE,
-  perm = 100
+  scale = TRUE,
+  perm = 100,
+  slot = NULL,
+  assays = NULL,
+  group.by = "orig.ident",
+  source_gene_length = "web",
+  min_prob = NULL
 )
 }
 \arguments{
-\item{eset}{expression set with genes names as row and sample id as column}
+\item{eset}{expression set with genes names as row and sample id as column, or Seurat object}
 
 \item{method}{default is `ensemble`, other options: `svm`, `rf`, `nnet`, `knn`, `dt`, `xgboost`}
 
@@ -37,9 +42,19 @@ tme_classifier(
 
 \item{log2trans}{default is FALSE,}
 
-\item{scale}{default is FALSE}
+\item{scale}{default is TRUE}
 
 \item{perm}{permutation of CIBERSORT}
+
+\item{slot}{if input is 'Seurat' object, slot should be defined to aggregate scRNA matrix group by samples; options: `counts`, `SCT`, `integrated`}
+
+\item{assays}{default is null. If null, DefaultAssay will be used}
+
+\item{group.by}{default is `orig.ident`}
+
+\item{source_gene_length}{default is `web`, which will request data from the `Ensembl` database, if the error is returned,try `default`.}
+
+\item{min_prob}{minimal probability for the subtype}
 }
 \description{
 TME classifier for gastric cancer

@@ -20,7 +20,9 @@ surv_cluster(
   mini_sig = "score",
   save_path = paste0("KMplot"),
   fig.type = "pdf",
-  index = 1
+  index = 1,
+  width = 6,
+  height = 6.5
 )
 }
 \arguments{
@@ -28,7 +30,7 @@ surv_cluster(
 
 \item{target_group}{target of binary variable}
 
-\item{ID}{}
+\item{ID}{identifier of data}
 
 \item{levels}{level of variable}
 
@@ -55,6 +57,10 @@ surv_cluster(
 \item{fig.type}{default is pdf, other option is png}
 
 \item{index}{folder name}
+
+\item{width}{default is 6}
+
+\item{height}{default is 6.5}
 }
 \description{
 Drawing KM-plot to a Categorical variable with two or more groups

@@ -14,6 +14,7 @@ Imports:
     ggplot2,
     IOBR,
     scales,
+    Seurat,
     tibble
 RoxygenNote: 7.2.0
 Depends: 
