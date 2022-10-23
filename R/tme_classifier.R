@@ -5,17 +5,22 @@
 
 #' TME classifier for gastric cancer
 #'
-#' @param eset expression set with genes names as row and sample id as column
+#' @param eset expression set with genes names as row and sample id as column, or Seurat object
 #' @param tme_deconvolution default is FALSE, if set to TRUE, this process will be time consuming.
 #' @param tme_data user can provide TME data estimated by CIBERSORT and MCPcounter, please modify the names of cell types, a reference data could be found by `eset_example`
 #' @param adjust_eset default is FALSE, it means that variables with missing value will to be preserved and will be replaced by mean value
 #' @param replace_na default is TRUE, variables with missing value will to be preserved and will be replaced by mean value of observations
 #' @param log2trans default is FALSE,
-#' @param scale default is FALSE
+#' @param scale default is TRUE
 #' @param array default is FALSE, if expression set was derived from micro array, this parameter should be set to TRUE, which will affect the TME deconvolution process
 #' @param save_data default is FALSE, if TRUE, processing data will be save to local path
 #' @param perm permutation of CIBERSORT
 #' @param method default is `ensemble`, other options: `svm`, `rf`, `nnet`, `knn`, `dt`, `xgboost`
+#' @param slot if input is 'Seurat' object, slot should be defined to aggregate scRNA matrix group by samples; options: `counts`, `SCT`, `integrated`
+#' @param assays default is null. If null, DefaultAssay will be used
+#' @param group.by default is `orig.ident`
+#' @param source_gene_length default is `web`, which will request data from the `Ensembl` database, if the error is returned,try `default`.
+#' @param min_prob minimal probability for the subtype
 #'
 #' @return
 #' @export
@@ -31,11 +36,35 @@ tme_classifier<-function(eset,
                          adjust_eset       = FALSE,
                          replace_na        = TRUE,
                          log2trans         = FALSE,
-                         scale             = FALSE,
-                         perm              = 100){
+                         scale             = TRUE,
+                         perm              = 100,
+                         slot              = NULL,
+                         assays            = NULL,
+                         group.by          = "orig.ident",
+                         source_gene_length= "web",
+                         min_prob          = NULL){
 
 
   cat(crayon::green("Step-1: Expression data preprocessing...\n"))
+
+
+  if(class(eset)[1]=="Seurat"){
+
+    cat(crayon::green(">>>-- Aggreating scRNAseq data...\n"))
+    if(is.null(slot)) slot<-"counts"
+    bulk <- Seurat:::PseudobulkExpression(object    = eset,
+                                          pb.method = 'aggregate',
+                                          slot      = slot,
+                                          assays    = assays,
+                                          group.by  = group.by)
+    bulk<-bulk[[1]]
+
+    #transform count to tpm
+    eset<-count2tpm(countMat = bulk, idType = "symbol", source = source_gene_length)
+
+    log2trans<-TRUE
+  }
+
 
   # message("Step-1: Expression data preprocessing...")
 
@@ -221,6 +250,10 @@ tme_classifier<-function(eset,
   submission$res_ensemble<-  cluster[apply(submission[,2:4], 1, which.max)]
 
   colnames(submission)[5]<-"TMEcluster"
+
+  if(!is.null(min_prob)){
+    submission$TMEcluster_adj<- ifelse(apply(submission[,2:4], 1, max)>= min_prob, submission$TMEcluster, "unassigned")
+  }
 
   message(" ")
   ############################################################
