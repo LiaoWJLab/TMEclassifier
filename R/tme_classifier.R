@@ -45,6 +45,9 @@ tme_classifier<-function(eset,
                          min_prob          = NULL){
 
 
+  if(!method%in%c("ensemble", "svm", "rf", "nnet", "knn", "dt", "xgboost")) stop(" 'method' must be one of: ensemble, svm, rf, nnet, knn, dt, xgboost")
+
+
   cat(crayon::green("Step-1: Expression data preprocessing...\n"))
 
 
@@ -136,13 +139,19 @@ tme_classifier<-function(eset,
     }
   }
 
-  if(!tme_deconvolution) message(">>> This step was skipped, user can set parameter `tme_deconvolution` to TRUE or provide TME data to realize prediction.")
-
-  cat(crayon::green(">>>--  More TME deconvolution algorithms can be reached from:  \n"))
-  cat(crayon::green(">>>--  https://github.com/IOBR/IOBR  \n"))
+  if(!tme_deconvolution){
+    message(">>> This step was skipped, user can set parameter `tme_deconvolution` to TRUE or provide TME data to realize prediction.")
+  }else{
+    cat(crayon::green(">>>--  More TME deconvolution algorithms can be reached from:  \n"))
+    cat(crayon::green(">>>--  https://github.com/IOBR/IOBR  \n"))
+  }
 
   eset2<-eset[rownames(eset)%in%c(feas1, feas2), ]
   ####################################################################
+  message(" ")
+  cat(crayon::green("Step-3: Predicting TME phenotypes...\n"))
+  # message("Step-3: Predicting TME phenotypes...")
+
   if(scale){
 
     message(">>>-- Scaling data...")
@@ -186,10 +195,6 @@ tme_classifier<-function(eset,
 
   if(save_data) save(eset2, file = "Processed_data.RData")
   ###########################
-
-  message(" ")
-  cat(crayon::green("Step-3: Predicting TME phenotypes...\n"))
-  # message("Step-3: Predicting TME phenotypes...")
 
 
   if(is.null(tme_data)|length(colnames(eset2)[grep(colnames(eset2),pattern = "CIBERSORT")])==0){

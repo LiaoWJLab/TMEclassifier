@@ -217,6 +217,7 @@ surv_cluster<-function(input_pdata,
                                   x = 0, y = 0.55,
                                   hjust = 0,
                                   fontface = 3,
+                                  size = 1,
                                   label = p.lab)
 
     # calculate pair-wise survival comparison
@@ -236,12 +237,10 @@ surv_cluster<-function(input_pdata,
 
   }else{
 
-
-
     # Sur <-   Surv(time = input_pdata$time,event = input_pdata$status)
-    # 将high变量转化为1，才能准确计算出HR，否则是反的
+    # turn high to '1'
     #####################################
-    input_pdata$target_group<-ifelse(input_pdata$target_group == reference_group,1,0)
+    input_pdata$target_group<-ifelse(input_pdata$target_group == reference_group, 1, 0)
 
     pvalue<-getHRandCIfromCoxph(coxph(Surv(time = input_pdata$time, event = input_pdata$status)~input_pdata$target_group,data = input_pdata))
 
