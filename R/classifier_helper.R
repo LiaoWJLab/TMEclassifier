@@ -83,6 +83,7 @@ varsfilter<-function(eset, vars = "row", remove_prop = 0.2){
 #' @param ID identifier of data
 #' @param width default is 6
 #' @param height default is 6.5
+#' @param font.size.table default is 62
 #'
 #' @author Dongqiang Zeng
 #' @importFrom survminer surv_cutpoint
@@ -111,7 +112,8 @@ surv_cluster<-function(input_pdata,
                        fig.type        = "pdf",
                        index           = 1,
                        width           = 6,
-                       height          = 6.5){
+                       height          = 6.5,
+                       font.size.table = 3){
 
 
   if(!target_group%in%colnames(input_pdata)) stop("Target group must be in the column of input_pdata")
@@ -217,7 +219,7 @@ surv_cluster<-function(input_pdata,
                                   x = 0, y = 0.55,
                                   hjust = 0,
                                   fontface = 3,
-                                  size = 1,
+                                  # size = 1,
                                   label = p.lab)
 
     # calculate pair-wise survival comparison
@@ -233,7 +235,7 @@ surv_cluster<-function(input_pdata,
     # options(stringsAsFactors = TRUE)
 
     df <- tibble(x = 0, y = 0, tb = list(addTab))
-    pp$plot <- pp$plot + ggpp::geom_table(data = df, aes(x = x, y = y, label = tb), table.rownames = TRUE)
+    pp$plot <- pp$plot + ggpp::geom_table(data = df, aes(x = x, y = y, label = tb), table.rownames = TRUE, size = font.size.table)
 
   }else{
 
