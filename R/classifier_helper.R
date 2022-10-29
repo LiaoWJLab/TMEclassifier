@@ -6,14 +6,19 @@
 
 #' draw confusion matrix
 #'
-#' @param m
+#' @param input
+#' @param x
+#' @param y
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-ggplotConfusionMatrix <- function(m){
+ggplotConfusionMatrix <- function(input, x, y){
+
+  m <-caret:: confusionMatrix(as.factor(input[, x]), as.factor(input[, y]))
+
   mytitle <- paste("Accuracy", scales:: percent_format()(m$overall[1]),
                    "Kappa", scales:: percent_format()(m$overall[2]))
   p <-
@@ -22,14 +27,14 @@ ggplotConfusionMatrix <- function(m){
     geom_tile(aes(fill = log(Freq)), colour = "white") +
     scale_fill_gradient(low = "white", high = "steelblue") +
     geom_text(aes(x = Reference, y = Prediction, label = Freq)) +
-    theme(legend.position = "none") +
+    theme(legend.position = "none") + theme_light()+
     ggtitle(mytitle)
   return(p)
 }
 
 
 
-#' varables filter
+#' variables filtering
 #'
 #' @param eset
 #' @param vars
@@ -66,7 +71,7 @@ varsfilter<-function(eset, vars = "row", remove_prop = 0.2){
 #' @param status status
 #' @param time_type month or day
 #' @param break_month break of time
-#' @param palette default is jama, if cols is null
+#' @param palette default is `jama`, if cols is null
 #' @param save_path default is KMplot
 #' @param mini_sig prefix of variable
 #' @param target_group target of binary variable
