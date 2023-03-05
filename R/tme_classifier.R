@@ -41,7 +41,7 @@ tme_classifier<-function(eset,
                          slot              = NULL,
                          assays            = NULL,
                          group.by          = "orig.ident",
-                         source_gene_length= "web",
+                         source_gene_length= "local",
                          min_prob          = NULL){
 
 
