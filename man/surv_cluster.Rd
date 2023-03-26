@@ -22,7 +22,8 @@ surv_cluster(
   fig.type = "pdf",
   index = 1,
   width = 6,
-  height = 6.5
+  height = 6.5,
+  font.size.table = 3
 )
 }
 \arguments{
@@ -48,7 +49,7 @@ surv_cluster(
 
 \item{cols}{if null, palette should be set}
 
-\item{palette}{default is jama, if cols is null}
+\item{palette}{default is `jama`, if cols is null}
 
 \item{mini_sig}{prefix of variable}
 
@@ -61,6 +62,8 @@ surv_cluster(
 \item{width}{default is 6}
 
 \item{height}{default is 6.5}
+
+\item{font.size.table}{default is 62}
 }
 \description{
 Drawing KM-plot to a Categorical variable with two or more groups

@@ -2,7 +2,7 @@
 % Please edit documentation in R/classifier_helper.R
 \name{varsfilter}
 \alias{varsfilter}
-\title{varables filter}
+\title{variables filtering}
 \usage{
 varsfilter(eset, vars = "row", remove_prop = 0.2)
 }
@@ -10,5 +10,5 @@ varsfilter(eset, vars = "row", remove_prop = 0.2)
 \item{quantile}{}
 }
 \description{
-varables filter
+variables filtering
 }
