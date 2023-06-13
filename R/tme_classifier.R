@@ -255,8 +255,11 @@ tme_classifier<-function(eset,
   cluster<-colnames(submission)[2:4]
   submission$res_ensemble<-  cluster[apply(submission[,2:4], 1, which.max)]
 
-  colnames(submission)[5]<-"TMEcluster"
-
+  colnames(submission)[2:5]<-c("IE","IS","IA","TMEcluster")
+  submission$TMEcluster<-gsub("TMEA","IE",submission$TMEcluster)
+  submission$TMEcluster<-gsub("TMEB","IS",submission$TMEcluster)
+  submission$TMEcluster<-gsub("TMEC","IA",submission$TMEcluster)
+  
   if(!is.null(min_prob)){
     submission$TMEcluster_adj<- ifelse(apply(submission[,2:4], 1, max)>= min_prob, submission$TMEcluster, "unassigned")
   }
@@ -264,7 +267,8 @@ tme_classifier<-function(eset,
   message(" ")
   ############################################################
   cat(crayon::red(">>>--- DONE!\n"))
-
+  
+  
   return(submission)
 }
 
