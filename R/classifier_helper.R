@@ -175,8 +175,9 @@ surv_cluster<-function(input_pdata,
   if(is.null(cols))  cols<-IOBR:: palettes(category = "box",palette = palette, show_col = F)
 
 
+  # print(unique(input_pdata$target_group))
 
-  if(length(unique(input_pdata$target_group)>2)){
+  if(length(unique(input_pdata$target_group))>2){
     input_pdata<-input_pdata[!is.na(input_pdata$target_group),]
     # input_pdata$target_group<-ifelse(input_pdata$target_group=="High",3,ifelse(input_pdata$target_group=="Middle",2,1))
     # Sur <- Surv(input_pdata$time,input_pdata$status)
@@ -241,12 +242,19 @@ surv_cluster<-function(input_pdata,
 
     # Sur <-   Surv(time = input_pdata$time,event = input_pdata$status)
     # turn high to '1'
+
+    # print(unique(input_pdata$target_group))
+    levels <- unique(input_pdata$target_group)
+    print(levels)
     #####################################
+    if(! reference_group%in% c(input_pdata$target_group)) stop(">>>--- Reference_group must be one of target...")
+
     input_pdata$target_group<-ifelse(input_pdata$target_group == reference_group, 1, 0)
 
     pvalue<-getHRandCIfromCoxph(coxph(Surv(time = input_pdata$time, event = input_pdata$status)~input_pdata$target_group,data = input_pdata))
 
     HR <- paste("Hazard Ratio = ", round(pvalue[,2],2), sep = "")
+
     CI <- paste("95% CI: ", paste(round(pvalue[,3],2), round(pvalue[,4],2), sep = " - "), sep = "")
     # cut_off<-paste("cutoff = ",round(res.cut,3),sep = "")
     ###########################################
@@ -254,6 +262,7 @@ surv_cluster<-function(input_pdata,
     # input_pdata[,index]<-ifelse(input_pdata[,index]==1,"High","LOW")
     ############################################
     #' define break time
+
 
     levels<-levels[order(levels)]
     ###########################################
@@ -264,9 +273,10 @@ surv_cluster<-function(input_pdata,
                    xlim = c(0,max_month),
                    break.time.by = break_month,
                    xlab = "Months after diagnosis",
-                   legend.labs = c(paste0(levels[2],' ',mini_sig),paste0(levels[1]," ",mini_sig)),
+                   legend.labs = c(paste0(levels[2]), paste0(levels[1])),
                    submain= paste0(target_group,"-in-",project),
-                   risk.table = T,tables.height = 0.20,
+                   risk.table = T,
+                   tables.height = 0.20,
                    palette = cols,
                    pval.size = 8,
                    pval = paste(pval = ifelse(pvalue[,1] < 0.0001, "P < 0.0001",
