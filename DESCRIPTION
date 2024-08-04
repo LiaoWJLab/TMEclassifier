@@ -16,6 +16,6 @@ Imports:
     scales,
     Seurat,
     tibble
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10)
